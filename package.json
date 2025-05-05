@@ -28,7 +28,7 @@
   "description": "Agent detection library for detecting AI agents using browser automation",
   "repository": {
     "type": "git",
-    "url": "https://github.com/superline-ai/agent-detection"
+    "url": "git+https://github.com/superline-ai/agent-detection.git"
   },
   "keywords": [
     "agent-detection",
