@@ -64,16 +64,16 @@ Add directly to your HTML head:
 Getting started with Superline Agent Detection is simple:
 
 ```javascript
-import agentDetector from '@superline-ai/agent-detection';
+import AgentDetector from '@superline-ai/agent-detection';
 
 // Initialize the detector (pre-instantiated)
-agentDetector.init({
+AgentDetector.init({
   debug: false,
   autoStart: true
 });
 
 // Later, when you want to check if the session is from an agent
-const result = await agentDetector.finalizeDetection();
+const result = await AgentDetector.finalizeDetection();
 console.log('Is agent:', result.isAgent, 'Score:', result.score);
 
 // Integration with analytics
