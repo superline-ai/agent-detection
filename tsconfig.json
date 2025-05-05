@@ -4,10 +4,10 @@
     "module": "esnext",
     "moduleResolution": "node",
     "declaration": true,
-    "outDir": "./dist",
+    "outDir": "./dist/esm",
     "strict": true,
     "esModuleInterop": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"]
 }

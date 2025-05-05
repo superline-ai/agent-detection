@@ -1,27 +1,45 @@
 {
-  "name": "agent-detector",
+  "name": "@superline-ai/agent-detection",
   "version": "0.0.1",
-  "main": "dist/index.umd.js",
-  "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.esm.js",
+  "types": "dist/esm/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
-    "import": "./dist/index.esm.js",
-    "require": "./dist/index.umd.js",
-    "types": "./dist/index.d.ts"
+    "import": "./dist/esm/index.esm.js",
+    "require": "./dist/cjs/index.js",
+    "types": "./dist/esm/types/index.d.ts"
   },
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
     "test:watch": "jest --watch",
     "watch": "rollup -c -w",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "NODE_ENV=production npm run build"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": {
+    "name": "Superline AI",
+    "email": "devs@superline.ai",
+    "url": "https://superline.ai"
+  },
+  "license": "Apache-2.0",
+  "description": "Agent detection library for detecting AI agents using browser automation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/superline-ai/agent-detection"
+  },
+  "keywords": [
+    "agent-detection",
+    "ai",
+    "agent",
+    "llm",
+    "detection"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
@@ -36,6 +54,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "idb": "^8.0.2",
     "simple-statistics": "^7.8.8",
     "tar-stream": "^3.1.7",
     "uuid": "^11.1.0"
