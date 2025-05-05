@@ -111,7 +111,7 @@ Currently, the library is "open weights" - providing the trained model weights f
 
 Join our Discord community to connect with other developers, ask questions, and share your experiences:
 
-[Join the Superline Discord](https://discord.gg/superline)
+[Join the Superline Discord](https://discord.gg/CnXvWasZ)
 
 ## License
 
