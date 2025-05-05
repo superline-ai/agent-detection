@@ -9,6 +9,7 @@ import {
   standardize,
   toSnakeCase,
 } from "./utils/math-utils";
+import { DEFAULT_THROTTLE_CONFIG, ThrottleConfig } from "./utils/throttle";
 
 // Import individual extractors
 import { ExtractorsManager } from "./extractors-manager";
@@ -59,6 +60,7 @@ export class AgentDetector {
   private eventStorage: IEventStorage;
   private sessionRestored: boolean = false;
   private extractorsManager: ExtractorsManager;
+  private throttleConfig: ThrottleConfig;
 
   // State for managing detection
   private isDetectionActive: boolean = false;
@@ -70,11 +72,13 @@ export class AgentDetector {
    * @param metadataProvider Provider for browser metadata, used to gather information about the browser environment
    * @param eventsProvider Provider for user interaction events like mouse movements, clicks, keyboard input
    * @param eventStorage Optional storage for event persistence between sessions, defaults to BrowserEventStorage
+   * @param throttleConfig Optional configuration for event throttling, defaults to DEFAULT_THROTTLE_CONFIG
    */
   constructor(
     metadataProvider: MetadataPort,
     eventsProvider: EventPort,
-    eventStorage?: IEventStorage
+    eventStorage?: IEventStorage,
+    throttleConfig?: ThrottleConfig
   ) {
     this.metadataProvider = metadataProvider;
     this.eventsProvider = eventsProvider;
@@ -84,10 +88,13 @@ export class AgentDetector {
       forceEnabled: false,
     });
     this.eventStorage = eventStorage || new BrowserEventStorage();
+    this.throttleConfig = throttleConfig || DEFAULT_THROTTLE_CONFIG;
     this.extractorsManager = new ExtractorsManager(
       this.metadataProvider,
       this.eventsProvider,
-      this.eventStorage
+      this.eventStorage,
+      this.debug,
+      this.throttleConfig
     );
   }
 
@@ -100,6 +107,7 @@ export class AgentDetector {
    * @param options.debug Whether to enable debug logging
    * @param options.extractorClasses Custom extractor classes to use instead of the default ones
    * @param options.autoStart Whether to automatically start detection after initialization (default: true)
+   * @param options.throttleConfig Optional configuration for event throttling
    * @returns The agent detector instance for chaining
    */
   public init(
@@ -108,10 +116,13 @@ export class AgentDetector {
       debug?: boolean;
       extractorClasses?: ExtractorClass[];
       autoStart?: boolean;
+      throttleConfig?: ThrottleConfig;
     } = {}
   ): AgentDetector {
     this.debug = options.debug || false;
     this.onDetectionCallback = options.onDetection || null;
+    this.throttleConfig = options.throttleConfig || DEFAULT_THROTTLE_CONFIG;
+
     // Set autoStart default value to true if not specified
     const autoStart =
       options.autoStart !== undefined ? options.autoStart : true;
@@ -122,7 +133,8 @@ export class AgentDetector {
       this.metadataProvider,
       this.eventsProvider,
       this.eventStorage,
-      this.debug
+      this.debug,
+      this.throttleConfig
     );
 
     this.resetDetectionState();
@@ -164,6 +176,7 @@ export class AgentDetector {
       hasModelParameters: !!this.modelParameters,
       autoStart,
       sessionRestored: this.sessionRestored,
+      throttleConfig: this.throttleConfig,
     });
 
     // Auto-start detection if enabled

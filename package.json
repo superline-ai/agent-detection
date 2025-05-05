@@ -1,14 +1,14 @@
 {
   "name": "@superline-ai/agent-detection",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.esm.js",
+  "module": "dist/esm/index.js",
   "types": "dist/esm/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
-    "import": "./dist/esm/index.esm.js",
+    "import": "./dist/esm/index.js",
     "require": "./dist/cjs/index.js",
     "types": "./dist/esm/types/index.d.ts"
   },

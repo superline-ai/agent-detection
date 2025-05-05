@@ -3,6 +3,11 @@ import { Logger, LogLevel } from "./logger";
 import { EventPort, MetadataPort } from "./ports";
 import { IEventStorage, StoredEvent } from "./storage";
 import { EventType } from "./types/events";
+import {
+  createThrottledEventHandler,
+  DEFAULT_THROTTLE_CONFIG,
+  ThrottleConfig,
+} from "./utils/throttle";
 
 /**
  * Type definition for extractor constructor
@@ -21,18 +26,21 @@ export class ExtractorsManager {
   private isActive: boolean = false;
   private registeredHandlers: Map<EventType, Array<(payload: any) => void>> =
     new Map();
+  private throttleConfig: ThrottleConfig;
 
   constructor(
     private metadataProvider: MetadataPort,
     private eventsProvider: EventPort,
     private eventStorage: IEventStorage,
-    private debug: boolean = false
+    private debug: boolean = false,
+    throttleConfig?: ThrottleConfig
   ) {
     this.logger = new Logger({
       component: this.constructor.name,
       minLevel: this.debug ? LogLevel.DEBUG : LogLevel.INFO,
       forceEnabled: false,
     });
+    this.throttleConfig = throttleConfig || DEFAULT_THROTTLE_CONFIG;
   }
 
   /**
@@ -134,29 +142,40 @@ export class ExtractorsManager {
       const handlers = extractor.getEventHandlers();
 
       for (const { eventType, handler } of handlers) {
-        // Create a wrapped handler that also stores events
-        const wrappedHandler = (payload: any) => {
+        // Create a wrapped handler that handles throttling and storing events
+        const storeAndHandleEvent = (payload: any) => {
           // Only process if the extractor is still listening
           if (extractor.isListening) {
-            // Store the event in the central storage
-            this.storeEvent(eventType, payload, extractorType);
-
             // Call the extractor's handler
             handler(payload);
+
+            // Store the event in the central storage after handler is called
+            this.storeEvent(eventType, payload, extractorType);
           }
         };
+
+        // Apply throttling to the handler
+        const throttledHandler = createThrottledEventHandler(
+          eventType,
+          storeAndHandleEvent,
+          this.throttleConfig
+        );
 
         // Add to our internal map for later removal
         if (!this.registeredHandlers.has(eventType)) {
           this.registeredHandlers.set(eventType, []);
         }
-        this.registeredHandlers.get(eventType)!.push(wrappedHandler);
+        this.registeredHandlers.get(eventType)!.push(throttledHandler);
 
         // Register with the event provider
-        this.eventsProvider.on(eventType, wrappedHandler);
+        this.eventsProvider.on(eventType, throttledHandler);
 
         this.logger.debug(
-          `Registered handler for ${eventType} event from ${extractorType}`
+          `Registered ${
+            this.throttleConfig.eventThrottleTimes.has(eventType)
+              ? "throttled "
+              : ""
+          }handler for ${eventType} event from ${extractorType}`
         );
       }
     }
