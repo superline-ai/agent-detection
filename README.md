@@ -3,7 +3,7 @@
 ![NPM Version](https://img.shields.io/npm/v/%40superline-ai%2Fagent-detection)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-A lightweight, high-performance library for detecting AI agents in real-time from browser sessions based on browser environment metadata and behavioral patterns.
+d
 
 > **Note:** This is an early version of the library and is not yet recommended for production use.
 
@@ -39,7 +39,7 @@ Add directly to your HTML head:
 
 ```html
 <!-- Add the script with defer attribute -->
-<script src="https://cdn.jsdelivr.net/npm/@superline-ai/agent-detection/dist/index.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@superline-ai/agent-detection/dist/umd/index.umd.js" defer></script>
 
 <!-- Initialize it with defer as well -->
 <script defer>
