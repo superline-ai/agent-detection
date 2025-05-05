@@ -3,7 +3,7 @@
  */
 export interface DetectionResult {
   isAgent: boolean;
-  score: number;
+  confidence: number;
   features?: Record<string, any>; // Combined features used for scoring
 }
 

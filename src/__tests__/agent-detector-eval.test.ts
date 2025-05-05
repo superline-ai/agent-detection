@@ -15,7 +15,7 @@ interface EvaluationResult {
   sessionId: string;
   groundTruth: "human" | "agent";
   prediction: boolean;
-  score: number;
+  confidence: number;
   metadata?: any;
 }
 
@@ -179,7 +179,7 @@ describe("Agent Detector Evaluation", () => {
         sessionId: r.sessionId,
         groundTruth: r.groundTruth,
         prediction: r.prediction ? "agent" : "human",
-        score: r.score.toFixed(4),
+        confidence: r.confidence.toFixed(4),
         correct:
           (r.groundTruth === "agent" && r.prediction) ||
           (r.groundTruth === "human" && !r.prediction),
@@ -240,7 +240,7 @@ async function processAllSessions(
         sessionId,
         groundTruth,
         prediction: detectionResult.isAgent,
-        score: detectionResult.score,
+        confidence: detectionResult.confidence,
         metadata: {
           userAgent: metadata.userAgent,
           timestamp: metadata.timestamp,

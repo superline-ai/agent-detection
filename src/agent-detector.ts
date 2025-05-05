@@ -65,6 +65,7 @@ export class AgentDetector {
   // State for managing detection
   private isDetectionActive: boolean = false;
   private isDetectionFinalizing: boolean = false;
+  private detectionThreshold: number = 0.5; // Default threshold
 
   /**
    * Creates a new agent detector instance.
@@ -108,6 +109,7 @@ export class AgentDetector {
    * @param options.extractorClasses Custom extractor classes to use instead of the default ones
    * @param options.autoStart Whether to automatically start detection after initialization (default: true)
    * @param options.throttleConfig Optional configuration for event throttling
+   * @param options.threshold Optional detection threshold (0-1), defaults to 0.5
    * @returns The agent detector instance for chaining
    */
   public init(
@@ -117,11 +119,14 @@ export class AgentDetector {
       extractorClasses?: ExtractorClass[];
       autoStart?: boolean;
       throttleConfig?: ThrottleConfig;
+      threshold?: number;
     } = {}
   ): AgentDetector {
     this.debug = options.debug || false;
     this.onDetectionCallback = options.onDetection || null;
     this.throttleConfig = options.throttleConfig || DEFAULT_THROTTLE_CONFIG;
+    this.detectionThreshold =
+      options.threshold !== undefined ? options.threshold : 0.5;
 
     // Set autoStart default value to true if not specified
     const autoStart =
@@ -369,8 +374,8 @@ export class AgentDetector {
 
     // Create detection result
     return {
-      isAgent: probabilityAgent >= 0.5,
-      score: probabilityAgent,
+      isAgent: probabilityAgent >= this.detectionThreshold,
+      confidence: probabilityAgent,
       features: features,
     };
   }
