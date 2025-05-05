@@ -493,7 +493,7 @@ export class AgentDetector {
     let result: DetectionResult;
 
     try {
-      // Extract final features and score
+      // Extract final features and predicted probability/confidence
       result = await this._performDetection();
 
       // Clean up listeners

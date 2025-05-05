@@ -55,7 +55,7 @@ Add directly to your HTML head:
     // Later, check if the session is from an agent
     window.agentDetector.finalizeDetection()
       .then(result => {
-        console.log('Is agent:', result.isAgent, 'Score:', result.score);
+        console.log('Is agent:', result.isAgent, 'Confidence:', result.confidence);
       });
   });
 </script>
@@ -76,7 +76,7 @@ AgentDetector.init({
 
 // Later, when you want to check if the session is from an agent
 const result = await AgentDetector.finalizeDetection();
-console.log('Is agent:', result.isAgent, 'Score:', result.score);
+console.log('Is agent:', result.isAgent, 'Confidence:', result.confidence);
 
 // Integration with analytics
 // Send the agent detection result to your analytics platform
@@ -84,13 +84,13 @@ if (result.isAgent) {
   // Example with Google Analytics 4
   gtag('set', 'user_properties', {
     is_agent: true,
-    agent_score: result.score
+    agent_confidence: result.confidence
   });
   
   // Example with Mixpanel
   mixpanel.people.set({
     'Is Agent': true,
-    'Agent Score': result.score
+    'Agent Confidence': result.confidence
   });
 }
 ```
