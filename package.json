@@ -1,6 +1,6 @@
 {
   "name": "@superline-ai/agent-detection",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/types/index.d.ts",
@@ -24,7 +24,7 @@
     "email": "devs@superline.ai",
     "url": "https://superline.ai"
   },
-  "license": "Apache-2.0",
+  "license": "MIT",
   "description": "Agent detection library for detecting AI agents using browser automation",
   "repository": {
     "type": "git",
