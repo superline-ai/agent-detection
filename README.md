@@ -1,7 +1,7 @@
 # Superline Agent Detection
 
 [![npm version](https://img.shields.io/npm/v/%40superline-ai%2Fagent-detection)](https://www.npmjs.com/package/@superline-ai/agent-detection)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/superline-ai/agent-detection/blob/main/LICENSE)
 
 A lightweight, high-performance library for detecting AI agents in real-time from browser sessions based on browser environment metadata and behavioral patterns.
 
@@ -117,7 +117,7 @@ Join our Discord community to connect with other developers, ask questions, and 
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## Changelog
 
