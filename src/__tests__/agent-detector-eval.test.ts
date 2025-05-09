@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { AgentDetector } from "../agent-detector";
 import { loadSessionEnvironment } from "../environments/replay/environment";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { BrowserMetadata } from "../types/browser-metadata";
 
 // Extend the BrowserMetadata type to include session label
@@ -16,7 +17,11 @@ interface EvaluationResult {
   groundTruth: "human" | "agent";
   prediction: boolean;
   confidence: number;
-  metadata?: any;
+  metadata?: {
+    userAgent?: string;
+    timestamp?: string | number;
+    [key: string]: unknown;
+  };
 }
 
 interface ConfusionMatrix {
@@ -37,6 +42,13 @@ interface PerformanceMetrics {
   npv: number;
 }
 
+interface BaselineData {
+  timestamp: string;
+  results: EvaluationResult[];
+  confusionMatrix: ConfusionMatrix;
+  metrics: PerformanceMetrics;
+}
+
 /**
  * This test suite evaluates the agent detector against recorded sessions.
  * It can be used to measure if changes to the implementation improve detection performance.
@@ -49,7 +61,7 @@ describe("Agent Detector Evaluation", () => {
   let results: EvaluationResult[] = [];
   let confusionMatrix: ConfusionMatrix;
   let metrics: PerformanceMetrics;
-  let baselineResults: any = null;
+  let baselineResults: BaselineData | null = null;
 
   // Find all session files once before running tests
   beforeAll(async () => {
@@ -73,7 +85,7 @@ describe("Agent Detector Evaluation", () => {
     const baselinePath = path.resolve(
       __dirname,
       "data",
-      "baseline-results.json"
+      "baseline-results.json",
     );
     if (fs.existsSync(baselinePath)) {
       try {
@@ -89,7 +101,7 @@ describe("Agent Detector Evaluation", () => {
     const baselinePath = path.resolve(
       __dirname,
       "data",
-      "baseline-results.json"
+      "baseline-results.json",
     );
     const baselineData = {
       timestamp: new Date().toISOString(),
@@ -126,12 +138,12 @@ describe("Agent Detector Evaluation", () => {
     console.log(
       `Human sessions: ${
         results.filter((r) => r.groundTruth === "human").length
-      }`
+      }`,
     );
     console.log(
       `Agent sessions: ${
         results.filter((r) => r.groundTruth === "agent").length
-      }`
+      }`,
     );
     console.log("------------------------------------------");
     console.log("CONFUSION MATRIX:");
@@ -158,12 +170,12 @@ describe("Agent Detector Evaluation", () => {
       console.log(
         `Accuracy change: ${(
           metrics.accuracy - baselineResults.metrics.accuracy
-        ).toFixed(4)}`
+        ).toFixed(4)}`,
       );
       console.log(
         `F1 Score change: ${(
           metrics.f1Score - baselineResults.metrics.f1Score
-        ).toFixed(4)}`
+        ).toFixed(4)}`,
       );
       console.log("==========================================");
     }
@@ -183,7 +195,7 @@ describe("Agent Detector Evaluation", () => {
         correct:
           (r.groundTruth === "agent" && r.prediction) ||
           (r.groundTruth === "human" && !r.prediction),
-      }))
+      })),
     );
 
     // Log how many more records exist beyond the displayed ones
@@ -191,7 +203,7 @@ describe("Agent Detector Evaluation", () => {
       console.log(
         `... and ${
           results.length - 20
-        } more records not displayed in the table.`
+        } more records not displayed in the table.`,
       );
     }
 
@@ -204,7 +216,7 @@ describe("Agent Detector Evaluation", () => {
  * Process all session files and evaluate the agent detector against them
  */
 async function processAllSessions(
-  sessionFiles: string[]
+  sessionFiles: string[],
 ): Promise<EvaluationResult[]> {
   const results: EvaluationResult[] = [];
 
@@ -262,7 +274,7 @@ async function processAllSessions(
  * Calculate confusion matrix from evaluation results
  */
 function calculateConfusionMatrix(
-  results: EvaluationResult[]
+  results: EvaluationResult[],
 ): ConfusionMatrix {
   const matrix: ConfusionMatrix = {
     truePositives: 0,

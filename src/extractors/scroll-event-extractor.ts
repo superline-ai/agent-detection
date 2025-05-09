@@ -43,7 +43,7 @@ export class ScrollEventExtractor extends FeatureExtractor<ScrollActivityFeature
   processEvents(events: StoredEvent[]): void {
     const scrollEvents = events
       .filter(
-        (event): event is StoredEvent<"scroll"> => event.type === "scroll"
+        (event): event is StoredEvent<"scroll"> => event.type === "scroll",
       )
       .map((event) => ({
         timestamp: event.timestamp,
@@ -77,9 +77,9 @@ export class ScrollEventExtractor extends FeatureExtractor<ScrollActivityFeature
 
     // Group scroll events where time difference is < 50ms
     const sortedEvents = [...this.scrollEvents].sort(
-      (a, b) => a.timestamp - b.timestamp
+      (a, b) => a.timestamp - b.timestamp,
     );
-    let activeScrollGroups = [];
+    const activeScrollGroups = [];
     let currentGroup = [sortedEvents[0]];
 
     for (let i = 1; i < sortedEvents.length; i++) {

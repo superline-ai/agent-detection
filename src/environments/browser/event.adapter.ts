@@ -7,7 +7,7 @@ type EventPayloadWithoutTimestamp<K extends EventType> = Omit<
   "timestamp"
 >;
 type EventTransformer<K extends EventType> = (
-  e: Event
+  e: Event,
 ) => EventPayloadWithoutTimestamp<K>;
 
 /**
@@ -54,7 +54,7 @@ export class BrowserEventAdapter implements EventPort {
         button: mouseEvent.button,
       };
     },
-    scroll: (e: Event) => {
+    scroll: () => {
       return {
         type: "scroll",
         scrollX: window.scrollX,
@@ -107,12 +107,12 @@ export class BrowserEventAdapter implements EventPort {
         button: mouseEvent.button,
       };
     },
-    focus: (e: Event) => {
+    focus: () => {
       return {
         type: "focus",
       }; // Default values for focus event
     },
-    blur: (e: Event) => {
+    blur: () => {
       return {
         type: "blur",
       }; // Default values for blur event
@@ -151,7 +151,7 @@ export class BrowserEventAdapter implements EventPort {
    */
   on<K extends EventType>(
     evt: K,
-    handler: (payload: EventPayloads[K]) => void
+    handler: (payload: EventPayloads[K]) => void,
   ): void {
     const transformer = this.eventTransformers[evt];
     const source = this.eventSourceMap[evt];
@@ -180,7 +180,7 @@ export class BrowserEventAdapter implements EventPort {
    */
   off<K extends EventType>(
     evt: K,
-    handler: (payload: EventPayloads[K]) => void
+    handler: (payload: EventPayloads[K]) => void,
   ): void {
     // Get the corresponding DOM event listener
     const domEventListener = this.handlerMap.get(handler);

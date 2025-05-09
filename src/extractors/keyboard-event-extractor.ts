@@ -11,10 +11,6 @@ import { EventPayloads, EventType } from "../types/events";
 // Define constants for calculation
 const TYPING_BURST_THRESHOLD_MS = 3000; // Time between keys to be considered different bursts
 
-interface StoredKeyEvent {
-  timestamp: number;
-}
-
 /**
  * Defines the structure for keyboard activity features.
  */
@@ -39,7 +35,7 @@ export class KeyboardEventExtractor extends FeatureExtractor<KeyboardActivityFea
   processEvents(events: StoredEvent[]): void {
     const keydownEvents = events
       .filter(
-        (event): event is StoredEvent<"keydown"> => event.type === "keydown"
+        (event): event is StoredEvent<"keydown"> => event.type === "keydown",
       )
       .map((event) => event.data);
 
@@ -70,7 +66,7 @@ export class KeyboardEventExtractor extends FeatureExtractor<KeyboardActivityFea
 
     // Sort events by timestamp
     const sortedEvents = [...this.keyEvents].sort(
-      (a, b) => a.timestamp - b.timestamp
+      (a, b) => a.timestamp - b.timestamp,
     );
 
     // Identify burst groups where time diff between events is > 3000ms

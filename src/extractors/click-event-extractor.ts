@@ -38,7 +38,8 @@ export class ClickEventExtractor extends FeatureExtractor<ActivityFeatures> {
     // Process mousemove events
     const mouseMoveEvents = events
       .filter(
-        (event): event is StoredEvent<"mousemove"> => event.type === "mousemove"
+        (event): event is StoredEvent<"mousemove"> =>
+          event.type === "mousemove",
       )
       .map((event) => event.data);
 
@@ -83,9 +84,9 @@ export class ClickEventExtractor extends FeatureExtractor<ActivityFeatures> {
 
     // Group mouse movements where time difference is < 50ms
     const sortedMoves = [...this.mouseMoves].sort(
-      (a, b) => a.timestamp - b.timestamp
+      (a, b) => a.timestamp - b.timestamp,
     );
-    let activeMovementGroups = [];
+    const activeMovementGroups = [];
     let currentGroup = [sortedMoves[0]];
 
     for (let i = 1; i < sortedMoves.length; i++) {

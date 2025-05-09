@@ -38,7 +38,7 @@ export class BrowserMetadataExtractor extends FeatureExtractor<BrowserMetadataFe
   }
 
   // Metadata extractor doesn't need events
-  processEvents(events: StoredEvent[]): void {
+  processEvents(_events: StoredEvent[]): void {
     // No events to process for metadata extractor
   }
 
