@@ -28,7 +28,7 @@ export class ReplayEnvironment implements Environment {
    */
   constructor(
     snapshot: { metadata: BrowserMetadata; events: ReplayEvents },
-    sessionId: string
+    sessionId: string,
   ) {
     this.metadata = new ReplayMetadataAdapter(snapshot);
     this.events = new ReplayEventAdapter(snapshot.events);
@@ -52,7 +52,7 @@ export class ReplayEnvironment implements Environment {
  * @returns Promise resolving to a configured ReplayEnvironment
  */
 export async function loadSessionEnvironment(
-  archivePath: string
+  archivePath: string,
 ): Promise<ReplayEnvironment> {
   const ext = path.extname(archivePath).toLowerCase();
   let snapshot: ReplaySnapshot;
@@ -94,9 +94,9 @@ function loadFromTarGz(gzPath: string): Promise<ReplaySnapshot> {
             if (l.trim()) {
               try {
                 const json = JSON.parse(l);
-                const event = json.type;
-                events.push(json as ReplayEvent<typeof event>);
-              } catch (e) {
+                const _event = json.type;
+                events.push(json as ReplayEvent<typeof _event>);
+              } catch (_e) {
                 console.warn(`Failed to parse JSON line: ${l}`);
                 // Continue to next line
               }
