@@ -2,6 +2,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
+import polyfills from "rollup-plugin-polyfill-node";
 
 export default [
   // ESM build
@@ -22,8 +23,9 @@ export default [
         declarationDir: "dist/esm/types",
         outDir: "./dist/esm",
       }),
-      resolve(),
+      resolve({ browser: true, preferBuiltins: false }),
       commonjs(),
+      polyfills(),
     ],
   },
   // UMD build (for browsers)
@@ -31,7 +33,10 @@ export default [
     input: "src/index.ts",
     output: {
       dir: "dist/umd",
-      entryFileNames: "index.umd.js",
+      entryFileNames:
+        process.env.NODE_ENV === "production"
+          ? "index.umd.min.js"
+          : "index.umd.js",
       format: "umd",
       name: "AgentDetector",
       sourcemap: true,
@@ -42,8 +47,9 @@ export default [
         tsconfig: "./tsconfig.json",
         outDir: "./dist/umd",
       }),
-      resolve(),
+      resolve({ browser: true, preferBuiltins: false }),
       commonjs(),
+      polyfills(),
       process.env.NODE_ENV === "production" &&
         terser({ keep_classnames: true, keep_fnames: true }),
     ],
@@ -65,8 +71,9 @@ export default [
         declaration: false,
         outDir: "./dist/cjs",
       }),
-      resolve(),
+      resolve({ browser: true, preferBuiltins: false }),
       commonjs(),
+      polyfills(),
     ],
   },
 ];
